@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: backend
+    privileged: true
+    networks:
+      rede_web:
+        ipv4_address: 192.168.1.10
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: frontend
+    privileged: true
+    networks:
+      rede_web:
+        ipv4_address: 192.168.1.11
+
+  banco:
+    build:
+      context: .
+      dockerfile: Dockerfile.banco
+    container_name: banco
+    image: postgres:13
+    privileged: true
+    networks:
+      rede_web:
+        ipv4_address: 192.168.1.12
+    ports:
+      - "5432:5432"
+
+networks:
+  rede_web:
+    driver: bridge
+    ipam: #Gerenciamento de Endereços IP
+      config:
+        - subnet: 192.168.1.0/24

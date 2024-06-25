@@ -1,0 +1,56 @@
+---
+- name: IMPLEMENTAR APLICAÇÃO DE MENSAGEM
+  hosts: localhost
+  become: true #Ansible execute comandos com privilégios elevados.
+  become_method: sudo #para obter privilégios de administrador.
+  become_user: root #root é o superusuário
+  vars:
+    ansible_become_pass: "17011994yeyeye" #ansible_become_pass: Define a senha necessária para realizar a operação de se tornar superusuário
+
+  vars_files: #vars: Esta seção é usada para definir variáveis que podem ser usadas no playbook.
+    - vars/vars.yml
+
+  tasks:
+    - name: O DOCKER ESTÁ RODANDO
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: CRIAR DIRETÓRIO DE PROJETO
+      file: #É um módulo do Ansible usado para gerenciar arquivos e diretórios.
+        path: /opt/messenger_app
+        state: directory
+        mode: '0755' #Define as permissões de acesso ao diretório. '0755' é um código octal que define permissões específicas para o diretório
+
+    - name: COPIAR OS ARQUIVOS DO PROJETO PARA O BACKEND
+      copy:
+        src: "docker_grpc_banco/{{ item }}"
+        dest: /opt/messenger_app/
+      with_items:
+        - frontend.py
+        - backend.py
+        - messenger.proto
+        - Dockerfile.frontend
+        - Dockerfile.backend
+        - Dockerfile.banco
+        - docker-compose.yml
+        - init.sql
+        - requirements.txt
+
+    - name: INICIAR CONTEINER DOCKER
+      shell: docker-compose up --build -d
+      args:
+        chdir: /opt/messenger_app
+
+    - name: VERIFICAR SE O CONTEINER DO BANCO ESTÁ EM EXECUÇÃO
+      community.docker.docker_container_info: #É o módulo do Ansible usado para obter informações sobre um contêiner Docker.
+        name: banco
+
+    - name: VERIFICAR SE O CONTEINER DO BACKEND ESTÁ EM EXECUÇÃO
+      community.docker.docker_container_info:
+        name: backend
+
+    - name: VERIFICAR SE O CONTEINER DO FRONTEND ESTÁ EM EXECUÇÃO
+      community.docker.docker_container_info:
+        name: frontend

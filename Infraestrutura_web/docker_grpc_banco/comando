@@ -1,0 +1,21 @@
+-- psql -U usuario -d banco_grpc
+-- \dt
+-- SELECT * FROM mensagem;
+-- docker stop $(docker ps -aq)
+-- docker rm $(docker ps -aq)
+-- docker exec -it frontend /bin/sh
+-- docker exec -it frontend /bin/bash
+-- docker volume prune -f
+-- DELETE FROM mensagens;
+-- chmod +x cleanup_docker.sh
+./cleanup_docker.sh
+-- docker volume rm $(docker volume ls -q)
+-- docker volume ls
+-- ansible-playbook playbook.yml
+-- docker volume rm -f
+-- ansible-playbook -i ansible.cfg, playbook.yml
+-- ansible-playbook -i hosts playbook.yml
+
+-- A linha localhost ansible_connection=local diz ao Ansible para executar 
+-- comandos e tarefas localmente, no próprio computador onde o 
+-- Ansible está rodando, em vez de tentar se conectar a um servidor remoto. 

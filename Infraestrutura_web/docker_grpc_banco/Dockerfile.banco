@@ -1,0 +1,12 @@
+FROM ubuntu:20.04
+
+FROM postgres:13
+
+ENV POSTGRES_DB=banco_grpc \
+    POSTGRES_USER=usuario \
+    POSTGRES_PASSWORD=12345
+
+COPY init.sql /docker-entrypoint-initdb.d/
+
+EXPOSE 5432
+
